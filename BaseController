@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using SinExWebApp20328953.Models;
+
+namespace SinExWebApp20328953.Controllers
+{
+    public class BaseController : Controller
+    {
+        private SinExDatabaseContext db = new SinExDatabaseContext();
+
+        // GET: Base
+        public decimal ConvertToCurrency(string currency, decimal fee)
+        {
+            if(Session[currency] == null)
+            {
+                var currencies = db.Currencies.ToList();
+                foreach(var item in currencies)
+                {
+                    Session[item.CurrencyCode] = item.ExchangeRate;
+                }
+            }
+
+            return (Decimal)Session[currency]*fee;
+        }
+    }
+}
